@@ -1,0 +1,51 @@
+#!/usr/bin/env sloth
+
+let build = Directory("${$scriptDir}/build")
+
+if not build.exists() {
+  build.create()
+}
+
+let configurations = [
+  "debug",
+  "release",
+  "iwyu",
+]
+
+if $argv.length != 1 {
+  throw "Usage: configure.sloth [debug | release | iwyu]"
+}
+
+let configuration = $argv[0].trim()
+if not configurations.contains(configuration) {
+  throw "\"${configuration}\" is not a known configuration; expected one of:\n\t${configurations}"
+}
+
+func configure(name, release, cxx) {
+  let dir = Directory("${build.path}/${name}")
+  if not dir.exists() {
+    dir.create()
+    with ($cwd = dir.path) {
+      [
+        'cmake', $scriptDir,
+        "-DCMAKE_CXX_COMPILER=${cxx}",
+        "-DCMAKE_BUILD_TYPE=${release}",
+        '-G', 'Ninja',
+      ]!
+    }
+  }
+
+  with($cwd = dir.path) {
+    'cmake --build .'!
+  }
+}
+
+if configuration == 'iwyu' {
+  configure('iwyu', 'Debug', 'include-what-you-use')
+} else if configuration == 'debug' {
+  configure('debug', 'Debug', 'clang++')
+} else if configuration == 'release' {
+  configure('release', 'Release', 'clang++')
+} else {
+  throw "Unreachable: ${configuration}"
+}
