@@ -12,12 +12,11 @@ void parse_command(std::string command) {
   }
 }
 
+std::vector<std::string> character_names = {"Foo Bar", "Yolo Dawg"};
 char *completionGenerator(const char *text, int state) {
   static int list_index, len;
 
   char *name;
-
-  std::vector<std::string> character_names = {"Foo Bar", "Yolo Dawg"};
 
   if (!state) {
     list_index = 0;
@@ -25,8 +24,8 @@ char *completionGenerator(const char *text, int state) {
   }
 
   int size = (int)character_names.size();
-  for (; list_index < size; list_index++) {
-    name = character_names[list_index].data();
+  while (list_index < size) {
+    name = character_names[list_index++].data();
     if (strncmp(name, text, len) == 0) {
       return strdup(name);
     }
