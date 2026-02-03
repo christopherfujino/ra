@@ -1,0 +1,6 @@
+#!/usr/bin/env sloth
+
+with ($cwd = $scriptDir) {
+  'cmake --build ./build/debug'!
+  './build/debug/main'!
+}

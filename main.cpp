@@ -1,8 +1,12 @@
 #include <cstdio>
+#include <random>
 #include <readline/history.h>
 #include <readline/readline.h>
 #include <string>
 #include <vector>
+
+import Card;
+using namespace RA;
 
 void parse_command(std::string command) {
   if (command == "exit") {
@@ -12,7 +16,7 @@ void parse_command(std::string command) {
   }
 }
 
-std::vector<std::string> character_names = {"Foo Bar", "Yolo Dawg"};
+std::vector<std::string> commands = {"inventory"};
 char *completionGenerator(const char *text, int state) {
   static int list_index, len;
 
@@ -23,9 +27,9 @@ char *completionGenerator(const char *text, int state) {
     len = strlen(text);
   }
 
-  int size = (int)character_names.size();
+  int size = (int)commands.size();
   while (list_index < size) {
-    name = character_names[list_index++].data();
+    name = commands[list_index++].data();
     if (strncmp(name, text, len) == 0) {
       return strdup(name);
     }
@@ -43,7 +47,14 @@ char **completer(const char *current, int, int) {
 
 int main() {
   rl_attempted_completion_function = completer;
+  std::minstd_rand rand;
+  rand.seed(0);
 
+  for (int i = 0; i < 20; i++) {
+    printf("%2d: %s\n", i, Rarity::toString(Rarity::pick(rand)));
+  }
+
+  return 1;
   while (1) {
     const char *ptr = readline("> ");
     if (ptr == nullptr) {

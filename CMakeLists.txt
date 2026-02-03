@@ -7,6 +7,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_SCAN_FOR_MODULES ON)
 
 add_compile_options(-Wall -Werror -Wpedantic -Wextra)
 
@@ -14,4 +15,14 @@ add_executable(main main.cpp)
 
 target_link_libraries(main PRIVATE lib readline)
 
-add_library(lib lib.cpp)
+add_library(lib SHARED)
+
+target_sources(
+  lib
+
+  PUBLIC
+  FILE_SET CXX_MODULES
+  FILES
+    lib/lib.cpp
+    lib/card.cpp
+  )
