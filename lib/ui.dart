@@ -3,12 +3,13 @@ import 'package:flutter/widgets.dart';
 const foregroundColor = Color(0xFF000000);
 const backgroundColor = Color(0xFFFFFFFF);
 const linkColor = Color(0xFF00FFFF);
+const double fontSize = 20;
 const toDo = Color(0xFF00FF00);
 
 Widget wrapApp(Widget child) {
   return WidgetsApp(
     color: Color(0xFFFF0000),
-    textStyle: TextStyle(color: foregroundColor),
+    textStyle: TextStyle(color: foregroundColor, fontSize: fontSize),
     builder: (_, _) => Stack(
       children: <Widget>[
         Container(color: backgroundColor),
@@ -16,15 +17,6 @@ Widget wrapApp(Widget child) {
       ],
     ),
   );
-  //return Directionality(
-  //  textDirection: TextDirection.ltr,
-  //  child: Stack(
-  //    children: <Widget>[
-  //      Container(color: backgroundColor),
-  //      padding(child),
-  //    ],
-  //  ),
-  //);
 }
 
 const double _padding = 6.0;
@@ -41,7 +33,7 @@ Container border(Widget child) => Container(
 
 final tableBorder = TableBorder.all(color: foregroundColor, width: 1.0);
 
-Column column({required List<Widget> children}) =>
+Column column(List<Widget> children) =>
     Column(crossAxisAlignment: CrossAxisAlignment.start, children: children);
 
 Widget button(String label, {required void Function() onPressed}) =>
@@ -56,3 +48,24 @@ Widget button(String label, {required void Function() onPressed}) =>
         ),
       ),
     );
+
+Widget table(List<List<Widget>> rawRows) {
+  final rows = rawRows.map((row) {
+    final cells = row.map((widget) => TableCell(child: widget));
+    return TableRow(children: cells.toList());
+  });
+
+  return padding(
+    Align(
+      alignment: AlignmentGeometry.topLeft,
+      child: Table(
+        defaultColumnWidth: const IntrinsicColumnWidth(),
+        border: tableBorder,
+        children: rows.toList(),
+      ),
+    ),
+  );
+}
+
+Widget text(String label, {bool addPadding = true}) =>
+    addPadding ? padding(Text(label)) : Text(label);
