@@ -1,61 +1,36 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 const foregroundColor = Color(0xFF000000);
 const backgroundColor = Color(0xFFFFFFFF);
+const linkColor = Color(0xFF00FFFF);
 const toDo = Color(0xFF00FF00);
 
 Widget wrapApp(Widget child) {
-  const textStyle = TextStyle(
-    color: foregroundColor,
-    backgroundColor: backgroundColor,
-    locale: Locale('en', 'US'),
-  );
-  final data = ThemeData(
-    textTheme: const TextTheme(
-      displayLarge: textStyle,
-      displayMedium: textStyle,
-      displaySmall: textStyle,
-      headlineLarge: textStyle,
-      headlineMedium: textStyle,
-      headlineSmall: textStyle,
-      titleLarge: textStyle,
-      titleMedium: textStyle,
-      titleSmall: textStyle,
-      bodyLarge: textStyle,
-      bodyMedium: textStyle,
-      bodySmall: textStyle,
-      labelLarge: textStyle,
-      labelMedium: textStyle,
-      labelSmall: textStyle,
-    ),
-    colorScheme: ColorScheme(
-      brightness: Brightness.light,
-      primary: backgroundColor,
-      onPrimary: foregroundColor,
-      secondary: toDo,
-      onSecondary: toDo,
-      surface: toDo,
-      onSurface: toDo,
-      error: toDo,
-      onError: const Color(0xFFFF0000),
+  return WidgetsApp(
+    color: Color(0xFFFF0000),
+    textStyle: TextStyle(color: foregroundColor),
+    builder: (_, _) => Stack(
+      children: <Widget>[
+        Container(color: backgroundColor),
+        child,
+      ],
     ),
   );
-  return Theme(
-    data: data,
-    child: Directionality(
-      textDirection: TextDirection.ltr,
-      child: Stack(
-        children: <Widget>[
-          Container(color: backgroundColor),
-          padding(child),
-        ],
-      ),
-    ),
-  );
+  //return Directionality(
+  //  textDirection: TextDirection.ltr,
+  //  child: Stack(
+  //    children: <Widget>[
+  //      Container(color: backgroundColor),
+  //      padding(child),
+  //    ],
+  //  ),
+  //);
 }
 
-Padding padding(Widget child) =>
-    Padding(padding: EdgeInsetsGeometry.all(5), child: child);
+const double _padding = 6.0;
+
+Padding padding(Widget child, {double padding = _padding}) =>
+    Padding(padding: EdgeInsetsGeometry.all(padding), child: child);
 
 Container border(Widget child) => Container(
   decoration: BoxDecoration(
@@ -70,5 +45,14 @@ Column column({required List<Widget> children}) =>
     Column(crossAxisAlignment: CrossAxisAlignment.start, children: children);
 
 Widget button(String label, {required void Function() onPressed}) =>
-    //RawMaterialButton(onPressed: onPressed, child: Text(label));
-    TextButton(onPressed: onPressed, child: Text(label));
+    GestureDetector(
+      onTap: onPressed,
+      child: Container(
+        margin: EdgeInsetsGeometry.all(_padding / 2),
+        color: foregroundColor,
+        child: padding(
+          Text(label, style: TextStyle(color: backgroundColor)),
+          padding: _padding / 2,
+        ),
+      ),
+    );

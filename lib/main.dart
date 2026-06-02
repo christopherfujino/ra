@@ -1,7 +1,7 @@
 import 'dart:async' show Timer;
 import 'dart:collection' show Queue;
 
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'ui.dart' as ui;
 
 void main() {
