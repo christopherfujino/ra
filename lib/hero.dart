@@ -26,5 +26,5 @@ class Hero {
   State state = const IdleState();
   int level = 1;
   int xp = 0;
-  int hp = 100;
+  double hp = 100;
 }
