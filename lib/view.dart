@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart' as fl;
-import 'main.dart' show Game;
 import 'ui.dart' as ui;
-import 'hero.dart' show Hero;
+import 'hero.dart' show Hero, StudyingState;
+import 'game.dart' show Game;
 
 sealed class View {
   fl.Widget build(Game game);
@@ -24,7 +24,7 @@ class HeroView implements View {
       ]),
       ui.row([
         ui.button('Study', () {
-          game.study(hero);
+          game.updateHeroState(hero, StudyingState());
           game.updateView(const DefaultView());
         }),
         ui.button('Return', () => game.updateView(const DefaultView())),

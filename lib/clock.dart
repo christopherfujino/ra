@@ -37,7 +37,7 @@ class Clock {
   int hours = 0;
   int minutes = 0;
 
-  static const _tickInterval = Duration(milliseconds: 500);
+  static const _tickInterval = Duration(milliseconds: 250);
   Timer? _timer;
 
   void _nativeCallback(Timer _) {
@@ -76,5 +76,3 @@ class Clock {
     return '${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')} ($timeOfDay) of day ${days + 1} $season';
   }
 }
-
-

@@ -1,22 +1,19 @@
-sealed class HeroState {
-  void update();
-}
+sealed class State {}
 
-class StudyingState implements HeroState {
-  @override
-  void update() {}
-
+class StudyingState implements State {
   @override
   String toString() => 'studying';
 }
 
-class IdleState implements HeroState {
-  const IdleState();
+class DeadState implements State {
+  const DeadState();
 
   @override
-  void update() {
-    // no-op
-  }
+  String toString() => 'dead';
+}
+
+class IdleState implements State {
+  const IdleState();
 
   @override
   String toString() => 'idle';
@@ -26,7 +23,7 @@ class Hero {
   Hero({required this.name});
 
   final String name;
-  HeroState state = const IdleState();
+  State state = const IdleState();
   int level = 1;
   int xp = 0;
   int hp = 100;
