@@ -36,7 +36,9 @@ final tableBorder = TableBorder.all(color: foregroundColor, width: 1.0);
 Column column(List<Widget> children) =>
     Column(crossAxisAlignment: CrossAxisAlignment.start, children: children);
 
-Widget button(String label, {required void Function() onPressed}) =>
+Row row(List<Widget> children) => Row(children: children);
+
+Widget button(String label, void Function() onPressed) =>
     GestureDetector(
       onTap: onPressed,
       child: Container(

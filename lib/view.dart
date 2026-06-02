@@ -22,10 +22,13 @@ class HeroView implements View {
         [ui.text('HP'), ui.text(hero.hp.toString())],
         [ui.text('State'), ui.text(hero.state.toString())],
       ]),
-      ui.button(
-        'Return',
-        onPressed: () => game.updateView(const DefaultView()),
-      ),
+      ui.row([
+        ui.button('Study', () {
+          game.study(hero);
+          game.updateView(const DefaultView());
+        }),
+        ui.button('Return', () => game.updateView(const DefaultView())),
+      ]),
     ]);
   }
 }
@@ -47,10 +50,7 @@ class DefaultView implements View {
         game.heroes
             .map(
               (hero) => <fl.Widget>[
-                ui.button(
-                  hero.name,
-                  onPressed: () => game.updateView(HeroView(hero)),
-                ),
+                ui.button(hero.name, () => game.updateView(HeroView(hero))),
                 ui.text("Level: ${hero.level}"),
                 ui.text("XP: ${hero.xp}"),
                 ui.text("HP: ${hero.hp}"),
