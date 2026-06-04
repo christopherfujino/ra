@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart' as fl;
 import 'ui.dart' as ui;
 import 'hero.dart' show Hero, StudyingState;
 import 'game.dart' show Game;
+import 'progression.dart' show Progression;
 
 sealed class View {
   fl.Widget build(Game game);
@@ -14,11 +15,12 @@ class HeroView implements View {
 
   @override
   fl.Widget build(Game game) {
+    final (level, xpRemaining) = hero.levelRemainder;
     return ui.column(<fl.Widget>[
       ui.text(hero.name),
       ui.table([
-        [ui.text('Level'), ui.text(hero.level.toString())],
-        [ui.text('XP'), ui.text(hero.xp.toString())],
+        [ui.text('Level'), ui.text(level)],
+        [ui.text('XP'), ui.text('${hero.xp} of ${hero.xp + xpRemaining}')],
         [ui.text('HP'), ui.text(hero.hp.toString())],
         [ui.text('State'), ui.text(hero.state.toString())],
       ]),
@@ -50,23 +52,24 @@ class DefaultView implements View {
         [
           'Name',
           'Species',
-          'Job',
           'Level',
           'XP',
           'HP',
+          'Action',
           'Status',
         ].map((s) => ui.text(s)).toList(),
-        ...game.heroes.map(
-          (hero) => <fl.Widget>[
+        ...game.heroes.map((hero) {
+          final (level, xpRemaining) = hero.levelRemainder;
+          return <fl.Widget>[
             ui.button(hero.name, () => game.updateView(HeroView(hero))),
-            ui.text(hero.species.toString()),
-            ui.text('job?'),
-            ui.text(hero.level.toString()),
-            ui.text(hero.xp.toString()),
+            ui.text(hero.species),
+            ui.text(level),
+            ui.text('${hero.xp} of ${hero.xp + xpRemaining}'),
             ui.text(hero.hp.toStringAsFixed(0)),
-            ui.text(hero.state.toString()),
-          ],
-        ),
+            ui.button('Study', () => hero.xp += 1),
+            ui.text(hero.state),
+          ];
+        }),
       ]),
     ];
 

@@ -1,4 +1,5 @@
 import 'dart:math' show Random;
+import 'progression.dart' show Progression;
 
 sealed class State {}
 
@@ -19,6 +20,15 @@ class IdleState implements State {
 
   @override
   String toString() => 'idle';
+}
+
+enum Job {
+  none;
+
+  @override
+  String toString() => switch (this) {
+    .none => 'none',
+  };
 }
 
 enum Species {
@@ -49,8 +59,11 @@ class Hero {
 
   final String name;
   final Species species;
+  final Job job = .none;
   State state = const IdleState();
-  int level = 1;
-  int xp = 0;
+  double xp = 0;
+  (double, double) get levelRemainder =>
+      Progression.forLevels.getLevelRemainder(xp);
+
   double hp = 100;
 }

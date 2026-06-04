@@ -69,5 +69,5 @@ Widget table(List<List<Widget>> rawRows) {
   );
 }
 
-Widget text(String label, {bool addPadding = true}) =>
-    addPadding ? padding(Text(label)) : Text(label);
+Widget text(Object obj, {bool addPadding = true}) =>
+    addPadding ? padding(Text(obj.toString())) : Text(obj.toString());
