@@ -46,19 +46,28 @@ class DefaultView implements View {
 
     final heroStatus = <fl.Widget>[
       ui.text('Heroes:'),
-      ui.table(
-        game.heroes
-            .map(
-              (hero) => <fl.Widget>[
-                ui.button(hero.name, () => game.updateView(HeroView(hero))),
-                ui.text("Level: ${hero.level}"),
-                ui.text("XP: ${hero.xp}"),
-                ui.text("HP: ${hero.hp}"),
-                ui.text(hero.state.toString()),
-              ],
-            )
-            .toList(),
-      ),
+      ui.table([
+        [
+          'Name',
+          'Species',
+          'Job',
+          'Level',
+          'XP',
+          'HP',
+          'Status',
+        ].map((s) => ui.text(s)).toList(),
+        ...game.heroes.map(
+          (hero) => <fl.Widget>[
+            ui.button(hero.name, () => game.updateView(HeroView(hero))),
+            ui.text(hero.species.toString()),
+            ui.text('job?'),
+            ui.text(hero.level.toString()),
+            ui.text(hero.xp.toString()),
+            ui.text(hero.hp.toStringAsFixed(0)),
+            ui.text(hero.state.toString()),
+          ],
+        ),
+      ]),
     ];
 
     final loreStatus = <fl.Widget>[

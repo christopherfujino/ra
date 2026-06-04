@@ -1,4 +1,5 @@
 import 'dart:collection' show Queue;
+import 'dart:math' show Random;
 import 'package:flutter/widgets.dart' as fl;
 import 'clock.dart';
 import 'hero.dart';
@@ -31,12 +32,35 @@ class Game extends fl.State<GameWidget> {
     clock.start();
   }
 
+  int nextInt(int x) => random.nextInt(x);
+  double nextDouble() => random.nextDouble();
+  List<T> shuffle<T extends Object>(List<T> original) {
+    final size = original.length;
+    final List<T?> workspace = [...original];
+    final output = <T>[];
+    for (int i = 0; i < size; i++) {
+      T? t;
+      int idx = nextInt(size);
+      while ((t = workspace[idx]) == null) {
+        idx++;
+        if (idx >= size) {
+          idx = 0;
+        }
+      }
+      output.add(t!);
+      workspace[idx] = null;
+    }
+    return output;
+  }
+
+  final random = Random();
+
   void update() {
     for (final hero in heroes) {
       if (hero.state case DeadState()) {
         continue;
       }
-      hero.hp -= 1;
+      hero.hp -= 0.1;
       if (hero.hp <= 0) {
         hero.hp = 0;
         lore.add('${hero.name} has died of hunger.');
@@ -72,20 +96,19 @@ class Game extends fl.State<GameWidget> {
         hero.state = nextState;
       default:
         lore.add(
-          '${hero.name} is ${hero.state}, they must be idle to start ${nextState}',
+          '${hero.name} is ${hero.state}, they must be idle to start $nextState',
         );
     }
   }
 
-  final heroes = [
+  late final heroes = shuffle([
     'Bill',
     'Betty',
     'Barbara',
     'Bob',
-  ].map((name) => Hero(name: name)).toList();
+  ]).map((name) => Hero(name, random)).toList();
 
-  final lore = Lore()
-    ..add('Your quest has begun.');
+  final lore = Lore()..add('Your quest has begun.');
 
   late final Clock clock = Clock(() {
     setState(() {
@@ -93,7 +116,7 @@ class Game extends fl.State<GameWidget> {
     });
   });
 
-  View view = DefaultView();
+  View view = const DefaultView();
 
   @override
   fl.Widget build(_) => view.build(this);
