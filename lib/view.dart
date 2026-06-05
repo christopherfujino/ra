@@ -64,7 +64,7 @@ class DefaultView implements View {
             ui.button(hero.name, () => game.updateView(HeroView(hero))),
             ui.text(hero.species),
             ui.text(level),
-            ui.text('${hero.xp} of ${hero.xp + xpRemaining}'),
+            ui.text('${hero.xp.toStringAsFixed(0)} (-$xpRemaining)'),
             ui.text(hero.hp.toStringAsFixed(0)),
             ui.button('Study', () => hero.xp += 1),
             ui.text(hero.state),

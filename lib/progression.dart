@@ -11,13 +11,12 @@ class Progression {
   late final List<double> _thresholds = [];
 
   (double, double) getLevelRemainder(double amount) {
-    double left = amount;
-    double level = 0;
-    double remainder = 0;
-    while(amount > 0) {
-
+    int level = 1;
+    while (amount > _thresholds[level]) {
+      level += 1;
     }
-    return (level, remainder);
+
+    return (level.toDouble(), _thresholds[level] - amount);
   }
 
   static final forLevels = Progression(10, 100, 2.0);
