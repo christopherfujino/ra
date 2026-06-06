@@ -27,14 +27,10 @@ class HeroView implements View {
       ]),
       ui.row([
         ui.button('Study', () {
+          game.updateView(const DefaultView());
           game.updateHeroState(hero, StudyingState());
-          game.view = const DefaultView();
-          game.update();
         }),
-        ui.button('Return', () {
-          game.view = const DefaultView();
-          game.update();
-        }),
+        ui.button('Return', () => game.updateView(const DefaultView())),
       ]),
     ]);
   }
@@ -67,22 +63,13 @@ class DefaultView implements View {
           final level = hero.level.floor();
           final xpRemaining = Progression.forLevels.ofLevel(level) - hero.xp;
           return <fl.Widget>[
-            ui.button(hero.name, () {
-              game.view = HeroView(hero);
-              game.update();
-            }),
+            ui.button(hero.name, () => game.updateView(HeroView(hero))),
             ui.text(hero.species),
             ui.text(level),
             ui.text('${hero.xp.floor()} (-${xpRemaining.floor()})'),
-            ui.text(hero.hp.floor()),
+            ui.text('${hero.hp.floor()} (${(hero.hp / hero.maxHp * 100).round()}%)'),
             ui.button('Study', () {
-              if (hero.setXp(hero.xp + 1)) {
-                final level = hero.level.floor();
-                game.lore.add(
-                  '${hero.name} levelled up: ${level - 1} => $level',
-                );
-              }
-              game.update();
+              game.updateHeroXpBy(hero, 1);
             }),
             ui.text(hero.state),
           ];

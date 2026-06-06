@@ -55,7 +55,8 @@ class Game extends fl.State<GameWidget> {
 
   final random = Random();
 
-  void update() {
+  // this should only be called by the clock!
+  void _clockTick() {
     setState(() {
       for (final hero in heroes) {
         if (hero.state case DeadState()) {
@@ -65,7 +66,7 @@ class Game extends fl.State<GameWidget> {
         if (hero.hp <= 0) {
           hero.hp = 0;
           lore.add('${hero.name} has died of hunger.');
-          updateHeroState(hero, const DeadState());
+          hero.state = const DeadState();
         }
       }
 
@@ -84,19 +85,30 @@ class Game extends fl.State<GameWidget> {
     });
   }
 
+  void updateHeroXpBy(Hero hero, double xpDiff) {
+    setState(() {
+      if (hero.setXp(hero.xp + 1)) {
+        final level = hero.level.floor();
+        lore.add('${hero.name} levelled up: ${level - 1} => $level');
+      }
+    });
+  }
+
   void updateHeroState(Hero hero, State nextState) {
-    if (nextState case DeadState()) {
-      hero.state = nextState;
-      return;
-    }
-    switch (hero.state) {
-      case IdleState():
+    setState(() {
+      if (nextState case DeadState()) {
         hero.state = nextState;
-      default:
-        lore.add(
-          '${hero.name} is ${hero.state}, they must be idle to start $nextState',
-        );
-    }
+        return;
+      }
+      switch (hero.state) {
+        case IdleState():
+          hero.state = nextState;
+        default:
+          lore.add(
+            '${hero.name} is ${hero.state}, they must be idle to start $nextState',
+          );
+      }
+    });
   }
 
   late final heroes = shuffle([
@@ -108,10 +120,11 @@ class Game extends fl.State<GameWidget> {
 
   final lore = Lore()..add('Your quest has begun.');
 
-  late final Clock clock = Clock(() => update());
+  late final Clock clock = Clock(() => _clockTick());
 
-  View view = const DefaultView();
+  View _view = const DefaultView();
+  void updateView(View nextView) => setState(() => _view = nextView);
 
   @override
-  fl.Widget build(_) => view.build(this);
+  fl.Widget build(_) => _view.build(this);
 }

@@ -75,5 +75,6 @@ class Hero {
     return false;
   }
 
-  double hp = 100;
+  double maxHp = 100;
+  late double hp = maxHp;
 }
