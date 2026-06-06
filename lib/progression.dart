@@ -5,19 +5,21 @@ class Progression {
       _thresholds.add(nextThreshold);
       nextThreshold *= multiplier;
     }
-    print(_thresholds);
   }
 
   late final List<double> _thresholds = [];
 
-  (double, double) getLevelRemainder(double amount) {
+  double ofLevel(int level) => _thresholds[level - 1];
+
+  double levelOf(double amount) {
     int level = 1;
-    while (amount > _thresholds[level]) {
+    while (amount >= _thresholds[level - 1]) {
       level += 1;
     }
 
-    return (level.toDouble(), _thresholds[level] - amount);
+    return level.toDouble();
   }
 
-  static final forLevels = Progression(10, 100, 2.0);
+  //static final forLevels = Progression(10, 100, 2.0);
+  static final forLevels = Progression(10, 10, 3.5);
 }

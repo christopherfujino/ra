@@ -56,34 +56,32 @@ class Game extends fl.State<GameWidget> {
   final random = Random();
 
   void update() {
-    for (final hero in heroes) {
-      if (hero.state case DeadState()) {
-        continue;
+    setState(() {
+      for (final hero in heroes) {
+        if (hero.state case DeadState()) {
+          continue;
+        }
+        hero.hp -= 0.1;
+        if (hero.hp <= 0) {
+          hero.hp = 0;
+          lore.add('${hero.name} has died of hunger.');
+          updateHeroState(hero, const DeadState());
+        }
       }
-      hero.hp -= 0.1;
-      if (hero.hp <= 0) {
-        hero.hp = 0;
-        lore.add('${hero.name} has died of hunger.');
-        updateHeroState(hero, const DeadState());
+
+      if (heroes
+              .where(
+                (hero) => switch (hero.state) {
+                  DeadState() => false,
+                  _ => true,
+                },
+              )
+              .firstOrNull ==
+          null) {
+        lore.add('All your heroes are dead!');
+        clock.stop();
       }
-    }
-
-    if (heroes
-            .where(
-              (hero) => switch (hero.state) {
-                DeadState() => false,
-                _ => true,
-              },
-            )
-            .firstOrNull ==
-        null) {
-      lore.add('All your heroes are dead!');
-      clock.stop();
-    }
-  }
-
-  void updateView(View nextView) {
-    setState(() => view = nextView);
+    });
   }
 
   void updateHeroState(Hero hero, State nextState) {
@@ -110,11 +108,7 @@ class Game extends fl.State<GameWidget> {
 
   final lore = Lore()..add('Your quest has begun.');
 
-  late final Clock clock = Clock(() {
-    setState(() {
-      update();
-    });
-  });
+  late final Clock clock = Clock(() => update());
 
   View view = const DefaultView();
 

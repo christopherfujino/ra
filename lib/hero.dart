@@ -61,9 +61,19 @@ class Hero {
   final Species species;
   final Job job = .none;
   State state = const IdleState();
-  double xp = 0;
-  (double, double) get levelRemainder =>
-      Progression.forLevels.getLevelRemainder(xp);
+  double level = 1;
+  double _xp = 0;
+
+  double get xp => _xp;
+  bool setXp(double newXp) {
+    _xp = newXp;
+    final newLevel = Progression.forLevels.levelOf(newXp);
+    if (newLevel != level) {
+      level = newLevel;
+      return true;
+    }
+    return false;
+  }
 
   double hp = 100;
 }

@@ -15,7 +15,8 @@ class HeroView implements View {
 
   @override
   fl.Widget build(Game game) {
-    final (level, xpRemaining) = hero.levelRemainder;
+    final level = hero.level.floor();
+    final xpRemaining = Progression.forLevels.ofLevel(level) - hero.xp;
     return ui.column(<fl.Widget>[
       ui.text(hero.name),
       ui.table([
@@ -27,9 +28,13 @@ class HeroView implements View {
       ui.row([
         ui.button('Study', () {
           game.updateHeroState(hero, StudyingState());
-          game.updateView(const DefaultView());
+          game.view = const DefaultView();
+          game.update();
         }),
-        ui.button('Return', () => game.updateView(const DefaultView())),
+        ui.button('Return', () {
+          game.view = const DefaultView();
+          game.update();
+        }),
       ]),
     ]);
   }
@@ -59,14 +64,26 @@ class DefaultView implements View {
           'Status',
         ].map((s) => ui.text(s)).toList(),
         ...game.heroes.map((hero) {
-          final (level, xpRemaining) = hero.levelRemainder;
+          final level = hero.level.floor();
+          final xpRemaining = Progression.forLevels.ofLevel(level) - hero.xp;
           return <fl.Widget>[
-            ui.button(hero.name, () => game.updateView(HeroView(hero))),
+            ui.button(hero.name, () {
+              game.view = HeroView(hero);
+              game.update();
+            }),
             ui.text(hero.species),
             ui.text(level),
-            ui.text('${hero.xp.toStringAsFixed(0)} (-$xpRemaining)'),
-            ui.text(hero.hp.toStringAsFixed(0)),
-            ui.button('Study', () => hero.xp += 1),
+            ui.text('${hero.xp.floor()} (-${xpRemaining.floor()})'),
+            ui.text(hero.hp.floor()),
+            ui.button('Study', () {
+              if (hero.setXp(hero.xp + 1)) {
+                final level = hero.level.floor();
+                game.lore.add(
+                  '${hero.name} levelled up: ${level - 1} => $level',
+                );
+              }
+              game.update();
+            }),
             ui.text(hero.state),
           ];
         }),
