@@ -3,6 +3,7 @@ import 'ui.dart' as ui;
 import 'hero.dart' show Hero, StudyingState;
 import 'game.dart' show Game;
 import 'progression.dart' show Progression;
+import 'globals.dart' as globals;
 
 sealed class View {
   fl.Widget build(Game game);
@@ -67,7 +68,7 @@ class DefaultView implements View {
             ui.text(hero.species),
             ui.text(level),
             ui.text('${hero.xp.floor()} (-${xpRemaining.floor()})'),
-            ui.text('${hero.hp.floor()} (${(hero.hp / hero.maxHp * 100).round()}%)'),
+            ui.progressBar(hero.hp / hero.maxHp),
             ui.button('Study', () {
               game.updateHeroXpBy(hero, 1);
             }),
