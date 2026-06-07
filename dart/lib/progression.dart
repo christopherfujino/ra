@@ -9,17 +9,10 @@ class Progression {
 
   late final List<double> _thresholds = [];
 
-  double ofLevel(int level) => _thresholds[level - 1];
+  double ofLevel(int level) => switch (level) {
+    1 => 0,
+    _ => _thresholds[level - 2],
+  };
 
-  double levelOf(double amount) {
-    int level = 1;
-    while (amount >= _thresholds[level - 1]) {
-      level += 1;
-    }
-
-    return level.toDouble();
-  }
-
-  //static final forLevels = Progression(10, 100, 2.0);
-  static final forLevels = Progression(10, 10, 3.5);
+  static final forLevels = Progression(10, 10, 4);
 }

@@ -7,7 +7,7 @@
 
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:flutter_rogue_adventure/main.dart';
+import 'package:flutter_rogue_adventure/game.dart';
 
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {

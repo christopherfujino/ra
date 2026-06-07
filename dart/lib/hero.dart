@@ -64,15 +64,22 @@ class Hero {
   double level = 1;
   double _xp = 0;
 
+  double get ratioToNextLevel {
+    final nextLevelXp = Progression.forLevels.ofLevel(level.floor() + 1);
+    final floorForCurrentLevel = Progression.forLevels.ofLevel(level.floor());
+    return (_xp - floorForCurrentLevel) / (nextLevelXp - floorForCurrentLevel);
+  }
+
   double get xp => _xp;
   bool setXp(double newXp) {
     _xp = newXp;
-    final newLevel = Progression.forLevels.levelOf(newXp);
-    if (newLevel != level) {
-      level = newLevel;
-      return true;
+    bool levelledUp = false;
+
+    while (_xp >= Progression.forLevels.ofLevel(level.floor() + 1)) {
+      level += 1;
+      levelledUp = true;
     }
-    return false;
+    return levelledUp;
   }
 
   double maxHp = 100;

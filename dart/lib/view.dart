@@ -3,7 +3,6 @@ import 'ui.dart' as ui;
 import 'hero.dart' show Hero, StudyingState;
 import 'game.dart' show Game;
 import 'progression.dart' show Progression;
-import 'globals.dart' as globals;
 
 sealed class View {
   fl.Widget build(Game game);
@@ -60,18 +59,16 @@ class DefaultView implements View {
           'Action',
           'Status',
         ].map((s) => ui.text(s)).toList(),
-        ...game.heroes.map((hero) {
+        ...game.heroes.map((Hero hero) {
           final level = hero.level.floor();
-          final xpRemaining = Progression.forLevels.ofLevel(level) - hero.xp;
+          final nextLevelXp = Progression.forLevels.ofLevel(level + 1);
           return <fl.Widget>[
             ui.button(hero.name, () => game.updateView(HeroView(hero))),
             ui.text(hero.species),
             ui.text(level),
-            ui.text('${hero.xp.floor()} (-${xpRemaining.floor()})'),
-            ui.progressBar(hero.hp / hero.maxHp),
-            ui.button('Study', () {
-              game.updateHeroXpBy(hero, 1);
-            }),
+            ui.progressBar(hero.ratioToNextLevel, '${hero.xp.floor()} of ${nextLevelXp.ceil()}'),
+            ui.progressBar(hero.hp / hero.maxHp, hero.hp.floor().toString()),
+            ui.button('Study', () => game.updateHeroXpBy(hero, 1)),
             ui.text(hero.state),
           ];
         }),

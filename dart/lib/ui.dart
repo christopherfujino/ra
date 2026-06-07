@@ -91,9 +91,9 @@ class ProgressBarPainter extends fl.CustomPainter {
   }
 }
 
-fl.Widget progressBar(double ratio) {
+fl.Widget progressBar(double ratio, String label) {
   return fl.CustomPaint(
     painter: ProgressBarPainter(ratio),
-    child: padding(fl.Text('flooboo')),
+    child: padding(fl.Text(label)),
   );
 }
