@@ -66,7 +66,10 @@ class DefaultView implements View {
             ui.button(hero.name, () => game.updateView(HeroView(hero))),
             ui.text(hero.species),
             ui.text(level),
-            ui.progressBar(hero.ratioToNextLevel, '${hero.xp.floor()} of ${nextLevelXp.ceil()}'),
+            ui.progressBar(
+              hero.ratioToNextLevel,
+              '${hero.xp.floor()} of ${nextLevelXp.ceil()}',
+            ),
             ui.progressBar(hero.hp / hero.maxHp, hero.hp.floor().toString()),
             ui.button('Study', () => game.updateHeroXpBy(hero, 1)),
             ui.text(hero.state),
@@ -92,5 +95,24 @@ class DefaultView implements View {
       ...heroStatus,
       ...loreStatus,
     ]);
+  }
+}
+
+class PickerView({
+  required this.prompt,
+  required this.choices,
+  required this.callback,
+}) implements View {
+  final String prompt;
+  final List<fl.Widget> choices;
+  final void Function(int index) callback;
+
+  @override
+  fl.Widget build(Game _) {
+    final children = <fl.Widget>[];
+    for (int i = 0; i < choices.length; i++) {
+      children.add(ui.button(choices[i], () => callback(i)));
+    }
+    return ui.column([ui.text(prompt), ui.row(children)]);
   }
 }

@@ -17,9 +17,10 @@ fl.Widget wrapApp(fl.Widget child) {
   );
 }
 
-const double _padding = 6.0;
+// ignore: constant_identifier_names
+const double PADDING = 6.0;
 
-fl.Padding padding(fl.Widget child, {double padding = _padding}) =>
+fl.Padding padding(fl.Widget child, {double padding = PADDING}) =>
     fl.Padding(padding: fl.EdgeInsetsGeometry.all(padding), child: child);
 
 fl.Container border(fl.Widget child) => fl.Container(
@@ -36,19 +37,27 @@ fl.Column column(List<fl.Widget> children) => fl.Column(
   children: children,
 );
 
-fl.Row row(List<fl.Widget> children) => fl.Row(children: children);
+fl.Row row(List<fl.Widget> children) => fl.Row(spacing: PADDING, children: children);
 
-fl.Widget button(String label, void Function() onPressed) => fl.GestureDetector(
-  onTap: onPressed,
-  child: fl.Container(
-    margin: fl.EdgeInsetsGeometry.all(_padding / 2),
-    color: globals.color0,
-    child: padding(
-      fl.Text(label, style: fl.TextStyle(color: globals.color3)),
-      padding: _padding / 2,
+fl.Widget button(Object label, void Function() onPressed) {
+  final fl.Widget child = switch (label) {
+    fl.Widget() => fl.Container(
+      margin: fl.EdgeInsetsGeometry.all(PADDING / 2),
+      color: globals.color2,
+      child: padding(label, padding: PADDING / 2),
     ),
-  ),
-);
+    String() => fl.Container(
+      margin: fl.EdgeInsetsGeometry.all(PADDING / 2),
+      color: globals.color0,
+      child: padding(
+        fl.Text(label, style: fl.TextStyle(color: globals.color3)),
+        padding: PADDING / 2,
+      ),
+    ),
+    _ => throw Exception('Unreachable'),
+  };
+  return fl.GestureDetector(onTap: onPressed, child: child);
+}
 
 fl.Widget table(List<List<fl.Widget>> rawRows) {
   final rows = rawRows.map((row) {

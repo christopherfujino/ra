@@ -4,6 +4,7 @@ import 'package:flutter/widgets.dart' as fl;
 import 'clock.dart';
 import 'hero.dart';
 import 'view.dart';
+import 'ui.dart' as ui;
 
 class GameWidget extends fl.StatefulWidget {
   const GameWidget({super.key});
@@ -29,11 +30,32 @@ class Game extends fl.State<GameWidget> {
   void initState() {
     super.initState();
 
-    clock.start();
+    final candidateHeroes = shuffle([
+      'Bill',
+      'Betty',
+      'Barbara',
+      'Bob',
+      'Stevie',
+    ]).map((name) => Hero(name, random)).take(3).toList();
+
+    _view = PickerView(
+      prompt: 'choose a starter hero:',
+      choices: candidateHeroes
+          .map((hero) => ui.column([ui.text(hero.name), ui.text(hero.species)]))
+          .toList(),
+      callback: (int index) {
+        setState(() {
+          heroes = [candidateHeroes[index]];
+          clock.start();
+          _view = const DefaultView();
+        });
+      },
+    );
   }
 
   int nextInt(int x) => random.nextInt(x);
   double nextDouble() => random.nextDouble();
+
   List<T> shuffle<T extends Object>(List<T> original) {
     final size = original.length;
     final List<T?> workspace = [...original];
@@ -111,18 +133,13 @@ class Game extends fl.State<GameWidget> {
     });
   }
 
-  late final heroes = shuffle([
-    'Bill',
-    'Betty',
-    'Barbara',
-    'Bob',
-  ]).map((name) => Hero(name, random)).toList();
+  late List<Hero> heroes;
 
   final lore = Lore()..add('Your quest has begun.');
 
   late final Clock clock = Clock(() => _clockTick());
 
-  View _view = const DefaultView();
+  late View _view;
   void updateView(View nextView) => setState(() => _view = nextView);
 
   @override
